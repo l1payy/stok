@@ -47,12 +47,6 @@
                 <input id="remember_me" type="checkbox" class="rounded-md border-gray-300 text-primary shadow-sm focus:ring-primary focus:ring-offset-0" name="remember">
                 <span class="ms-2 text-xs text-gray-600 font-medium select-none">{{ __('Ingat saya') }}</span>
             </label>
-
-            @if (Route::has('password.request'))
-                <a class="text-xs text-accent hover:text-primary font-semibold transition duration-150" href="{{ route('password.request') }}">
-                    {{ __('Lupa password?') }}
-                </a>
-            @endif
         </div>
 
         <div class="pt-2">

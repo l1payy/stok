@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TransaksiKeluar;
+use App\Models\StokKeluar;
 use App\Models\Obat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class TransaksiKeluarController extends Controller
+class StokKeluarController extends Controller
 {
     public function index()
     {
-        $transaksi = TransaksiKeluar::with('obat', 'user')->latest()->paginate(10);
+        $transaksi = StokKeluar::with('obat', 'user')->latest()->paginate(10);
         $obat = Obat::where('stok_sekarang', '>', 0)->get();
-        return view('transaksi-keluar.index', compact('transaksi', 'obat'));
+        return view('stok-keluar.index', compact('transaksi', 'obat'));
     }
 
     public function store(Request $request)
@@ -33,7 +33,7 @@ class TransaksiKeluarController extends Controller
         }
 
         DB::transaction(function () use ($request, $obat) {
-            TransaksiKeluar::create([
+            StokKeluar::create([
                 'obat_id' => $request->obat_id,
                 'jumlah' => $request->jumlah,
                 'tanggal_keluar' => $request->tanggal_keluar,
@@ -43,10 +43,10 @@ class TransaksiKeluarController extends Controller
             $obat->decrement('stok_sekarang', $request->jumlah);
         });
 
-        return redirect()->route('transaksi-keluar.index')->with('success', 'Stok keluar berhasil dicatat.');
+        return redirect()->route('stok-keluar.index')->with('success', 'Stok keluar berhasil dicatat.');
     }
 
-    public function update(Request $request, TransaksiKeluar $transaksiKeluar)
+    public function update(Request $request, StokKeluar $stokKeluar)
     {
         $request->validate([
             'obat_id' => 'required|exists:obat,id',
@@ -55,7 +55,7 @@ class TransaksiKeluarController extends Controller
         ]);
 
         $obat = Obat::find($request->obat_id);
-        $selisih = $request->jumlah - $transaksiKeluar->jumlah;
+        $selisih = $request->jumlah - $stokKeluar->jumlah;
 
         if ($obat->stok_sekarang < $selisih) {
             return redirect()->back()
@@ -63,8 +63,8 @@ class TransaksiKeluarController extends Controller
                 ->with('error', 'Stok tidak mencukupi untuk pembaruan ini. Stok saat ini: ' . $obat->stok_sekarang);
         }
 
-        DB::transaction(function () use ($request, $transaksiKeluar, $obat, $selisih) {
-            $transaksiKeluar->update([
+        DB::transaction(function () use ($request, $stokKeluar, $obat, $selisih) {
+            $stokKeluar->update([
                 'obat_id' => $request->obat_id,
                 'jumlah' => $request->jumlah,
                 'tanggal_keluar' => $request->tanggal_keluar,
@@ -73,21 +73,21 @@ class TransaksiKeluarController extends Controller
             $obat->decrement('stok_sekarang', $selisih);
         });
 
-        return redirect()->route('transaksi-keluar.index')->with('success', 'Catatan stok keluar berhasil diperbarui.');
+        return redirect()->route('stok-keluar.index')->with('success', 'Catatan stok keluar berhasil diperbarui.');
     }
 
-    public function destroy(TransaksiKeluar $transaksiKeluar)
+    public function destroy(StokKeluar $stokKeluar)
     {
         if (auth()->user()->role !== 'admin') {
-            return redirect()->route('transaksi-keluar.index')->with('error', 'Hanya admin yang dapat menghapus data.');
+            return redirect()->route('stok-keluar.index')->with('error', 'Hanya admin yang dapat menghapus data.');
         }
 
-        DB::transaction(function () use ($transaksiKeluar) {
-            $obat = Obat::find($transaksiKeluar->obat_id);
-            $obat->increment('stok_sekarang', $transaksiKeluar->jumlah);
-            $transaksiKeluar->delete();
+        DB::transaction(function () use ($stokKeluar) {
+            $obat = Obat::find($stokKeluar->obat_id);
+            $obat->increment('stok_sekarang', $stokKeluar->jumlah);
+            $stokKeluar->delete();
         });
 
-        return redirect()->route('transaksi-keluar.index')->with('success', 'Catatan stok keluar berhasil dihapus.');
+        return redirect()->route('stok-keluar.index')->with('success', 'Catatan stok keluar berhasil dihapus.');
     }
 }

@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TransaksiMasuk extends Model
+class StokKeluar extends Model
 {
-    protected $table = 'transaksi_masuk';
+    protected $table = 'transaksi_keluar';
 
     protected $fillable = [
         'obat_id',
         'jumlah',
-        'tanggal_masuk',
+        'tanggal_keluar',
         'created_by',
     ];
 

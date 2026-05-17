@@ -33,11 +33,11 @@
                         Inventaris Obat
                     </x-nav-link-custom>
 
-                    <x-nav-link-custom :href="route('transaksi-masuk.index')" :active="request()->routeIs('transaksi-masuk.*')" icon="plus">
+                    <x-nav-link-custom :href="route('stok-masuk.index')" :active="request()->routeIs('stok-masuk.*')" icon="plus">
                         Stok Masuk
                     </x-nav-link-custom>
 
-                    <x-nav-link-custom :href="route('transaksi-keluar.index')" :active="request()->routeIs('transaksi-keluar.*')" icon="minus">
+                    <x-nav-link-custom :href="route('stok-keluar.index')" :active="request()->routeIs('stok-keluar.*')" icon="minus">
                         Stok Keluar
                     </x-nav-link-custom>
 

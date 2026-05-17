@@ -26,11 +26,14 @@ class ObatController extends Controller
         $validated = $request->validate([
             'nama_obat' => 'required',
             'satuan' => 'required',
+            'harga_satuan' => 'required|numeric|min:0',
+            'sumber_obat' => 'required|in:APBD,JKN',
+            'tanggal_kadaluarsa' => 'nullable|date',
             'stok_sekarang' => 'required|integer|min:0',
             'stok_minimum' => 'required|integer|min:0',
         ]);
 
-        $validated['kode_obat'] = 'OBT-' . strtoupper(uniqid()); // Generate automatic code since it's removed from UI
+        $validated['kode_obat'] = 'OBT-' . strtoupper(uniqid());
 
         Obat::create($validated);
 
@@ -42,6 +45,9 @@ class ObatController extends Controller
         $validated = $request->validate([
             'nama_obat' => 'required',
             'satuan' => 'required',
+            'harga_satuan' => 'required|numeric|min:0',
+            'sumber_obat' => 'required|in:APBD,JKN',
+            'tanggal_kadaluarsa' => 'nullable|date',
             'stok_sekarang' => 'required|integer|min:0',
             'stok_minimum' => 'required|integer|min:0',
         ]);

@@ -13,6 +13,9 @@
         kode_obat: '',
         nama_obat: '',
         satuan: 'tablet',
+        harga_satuan: 0,
+        sumber_obat: 'APBD',
+        tanggal_kadaluarsa: '',
         stok_sekarang: 0,
         stok_minimum: 0
     },
@@ -20,7 +23,17 @@
         this.modalTitle = 'Tambah Obat Baru';
         this.modalAction = '{{ route('obat.store') }}';
         this.modalMethod = 'POST';
-        this.obat = { id: '', kode_obat: '', nama_obat: '', satuan: 'tablet', stok_sekarang: 0, stok_minimum: 0 };
+        this.obat = { 
+            id: '', 
+            kode_obat: '', 
+            nama_obat: '', 
+            satuan: 'tablet', 
+            harga_satuan: 0, 
+            sumber_obat: 'APBD', 
+            tanggal_kadaluarsa: '', 
+            stok_sekarang: 0, 
+            stok_minimum: 0 
+        };
         this.showModal = true;
     },
     openEditModal(data) {
@@ -70,6 +83,9 @@
                         <th class="px-6 py-4 font-semibold">No</th>
                         <th class="px-6 py-4 font-semibold">Nama Obat</th>
                         <th class="px-6 py-4 font-semibold text-center">Satuan</th>
+                        <th class="px-6 py-4 font-semibold text-center">Harga Satuan</th>
+                        <th class="px-6 py-4 font-semibold text-center">Sumber</th>
+                        <th class="px-6 py-4 font-semibold text-center">Kadaluarsa (1 Bln)</th>
                         <th class="px-6 py-4 font-semibold text-center">Stok</th>
                         <th class="px-6 py-4 font-semibold text-center">Min. Stok</th>
                         <th class="px-6 py-4 font-semibold text-center">Status</th>
@@ -82,17 +98,40 @@
                             <td class="px-6 py-4 text-sm text-gray-600">{{ $obat->firstItem() + $index }}</td>
                             <td class="px-6 py-4 text-sm font-bold text-primary">{{ $item->nama_obat }}</td>
                             <td class="px-6 py-4 text-sm text-gray-600 text-center">{{ ucfirst($item->satuan) }}</td>
-                            <td class="px-6 py-4 text-sm font-bold text-center {{ $item->stok_sekarang <= $item->stok_minimum ? 'text-warning' : 'text-primary' }}">
+                            <td class="px-6 py-4 text-sm text-gray-600 text-center">Rp {{ number_format($item->harga_satuan, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-600 text-center">{{ $item->sumber_obat }}</td>
+                            <td class="px-6 py-4 text-sm text-center">
+                                @php
+                                    $oneMonthFromNow = \Carbon\Carbon::now()->addMonth();
+                                    $nearExpiryCount = $item->stokMasuk()
+                                        ->whereBetween('tanggal_kadaluarsa', [\Carbon\Carbon::now(), $oneMonthFromNow])
+                                        ->sum('jumlah');
+                                    
+                                    // Also check the initial expiry date set on the medicine itself
+                                    if ($item->tanggal_kadaluarsa && 
+                                        \Carbon\Carbon::parse($item->tanggal_kadaluarsa)->isBetween(\Carbon\Carbon::now(), $oneMonthFromNow)) {
+                                        // This is tricky because we don't know how much of the 'stok_sekarang' belongs to the initial expiry
+                                        // But for the logic you want, we'll focus on the transactions first.
+                                    }
+                                @endphp
+
+                                @if($nearExpiryCount > 0)
+                                    <span class="text-gray-900 font-bold">{{ $nearExpiryCount }} (Akan Kadaluarsa)</span>
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 text-sm font-bold text-center text-gray-900">
                                 {{ $item->stok_sekarang }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-600 text-center">{{ $item->stok_minimum }}</td>
                             <td class="px-6 py-4 text-center">
                                 @if($item->stok_sekarang == 0)
-                                    <span class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-red-100 text-danger">Habis</span>
+                                    <span class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-gray-100 text-gray-900">Habis</span>
                                 @elseif($item->stok_sekarang <= $item->stok_minimum)
-                                    <span class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-amber-100 text-warning">Menipis</span>
+                                    <span class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-gray-100 text-gray-900">Menipis</span>
                                 @else
-                                    <span class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-green-100 text-success">Aman</span>
+                                    <span class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-gray-100 text-gray-900">Aman</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-center">
@@ -163,7 +202,7 @@
                     </div>
 
                     <div class="bg-white px-6 py-6 space-y-4">
-                        <div class="grid grid-cols-1 gap-4">
+                        <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Satuan</label>
                                 <select name="satuan" x-model="obat.satuan" required class="w-full rounded-lg border-gray-200 focus:border-accent focus:ring-accent text-sm">
@@ -175,6 +214,24 @@
                                     <option value="sachet">Sachet</option>
                                     <option value="vial">Vial</option>
                                 </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Harga Satuan (Rp)</label>
+                                <input type="number" name="harga_satuan" x-model="obat.harga_satuan" required min="0" class="w-full rounded-lg border-gray-200 focus:border-accent focus:ring-accent text-sm">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Sumber Obat</label>
+                                <select name="sumber_obat" x-model="obat.sumber_obat" required class="w-full rounded-lg border-gray-200 focus:border-accent focus:ring-accent text-sm">
+                                    <option value="APBD">APBD</option>
+                                    <option value="JKN">JKN</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tanggal Kadaluarsa</label>
+                                <input type="date" name="tanggal_kadaluarsa" x-model="obat.tanggal_kadaluarsa" class="w-full rounded-lg border-gray-200 focus:border-accent focus:ring-accent text-sm">
                             </div>
                         </div>
 

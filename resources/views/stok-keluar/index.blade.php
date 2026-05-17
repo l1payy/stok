@@ -1,33 +1,33 @@
 @extends('layouts.app')
 
-@section('title', 'Manajemen Stok Masuk')
+@section('title', 'Manajemen Stok Keluar')
 
 @section('content')
 <div class="space-y-6" x-data="{ 
-    showModal: false,
+    showModal: false, 
     showEditModal: false,
     editData: {
         id: '',
         obat_id: '',
         jumlah: '',
-        tanggal_masuk: ''
+        tanggal_keluar: ''
     },
     openEditModal(item) {
         this.editData = {
             id: item.id,
             obat_id: item.obat_id,
             jumlah: item.jumlah,
-            tanggal_masuk: item.tanggal_masuk
+            tanggal_keluar: item.tanggal_keluar
         };
         this.showEditModal = true;
     }
 }">
     <!-- Header Actions -->
     <div class="flex justify-between items-center">
-        <p class="text-sm text-gray-500">Catat penerimaan obat baru ke gudang</p>
+        <p class="text-sm text-gray-500">Catat pengeluaran obat untuk unit layanan</p>
         <button @click="showModal = true" class="bg-accent hover:bg-blue-500 text-white px-6 py-2 rounded-lg font-bold text-sm flex items-center transition duration-150 shadow-sm">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            Catat Stok Masuk
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
+            Catat Stok Keluar
         </button>
     </div>
 
@@ -36,6 +36,25 @@
         <div class="bg-green-100 border-l-4 border-success p-4 text-green-700 text-sm rounded-r-lg shadow-sm flex items-center">
             <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             {{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="bg-red-100 border-l-4 border-danger p-4 text-red-700 text-sm rounded-r-lg shadow-sm flex items-center">
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            {{ session('error') }}
+        </div>
+    @endif
+    @if($errors->any())
+        <div class="bg-red-100 border-l-4 border-danger p-4 text-red-700 text-sm rounded-r-lg shadow-sm">
+            <div class="flex items-center mb-2">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span class="font-bold">Terjadi kesalahan:</span>
+            </div>
+            <ul class="list-disc list-inside ml-8">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
     @endif
 
@@ -49,7 +68,7 @@
                         <th class="px-6 py-4 font-semibold">Tanggal</th>
                         <th class="px-6 py-4 font-semibold">Nama Obat</th>
                         <th class="px-6 py-4 font-semibold text-center">Satuan</th>
-                        <th class="px-6 py-4 font-semibold text-center">Jumlah Masuk</th>
+                        <th class="px-6 py-4 font-semibold text-center">Jumlah Keluar</th>
                         <th class="px-6 py-4 font-semibold text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -57,16 +76,16 @@
                     @forelse($transaksi as $index => $item)
                         <tr class="hover:bg-gray-50 transition duration-150">
                             <td class="px-6 py-4 text-sm text-gray-600">{{ $transaksi->firstItem() + $index }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-600">{{ \Carbon\Carbon::parse($item->tanggal_masuk)->format('d M Y') }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">{{ \Carbon\Carbon::parse($item->tanggal_keluar)->format('d M Y') }}</td>
                             <td class="px-6 py-4 text-sm font-bold text-primary">{{ $item->obat->nama_obat }}</td>
                             <td class="px-6 py-4 text-sm text-gray-600 text-center">{{ ucfirst($item->obat->satuan) }}</td>
-                            <td class="px-6 py-4 text-sm font-bold text-center text-accent">+ {{ $item->jumlah }}</td>
+                            <td class="px-6 py-4 text-sm font-bold text-center text-gray-900">{{ $item->jumlah }}</td>
                             <td class="px-6 py-4 text-center flex justify-center space-x-2">
                                 <button @click="openEditModal({{ $item }})" class="text-blue-500 hover:text-blue-700 transition">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                 </button>
                                 @if(auth()->user()->role === 'admin')
-                                    <form action="{{ route('transaksi-masuk.destroy', $item) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus catatan ini? Stok akan dikurangi kembali.')">
+                                    <form action="{{ route('stok-keluar.destroy', $item) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus catatan ini? Stok akan dikembalikan.')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-500 hover:text-red-700 transition">
@@ -78,7 +97,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-10 text-center text-gray-400 italic">Belum ada riwayat stok masuk.</td>
+                            <td colspan="6" class="px-6 py-10 text-center text-gray-400 italic">Belum ada riwayat stok keluar.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -106,10 +125,10 @@
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span>&#8203;
 
             <div x-show="showModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" class="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <form action="{{ route('transaksi-masuk.store') }}" method="POST">
+                <form action="{{ route('stok-keluar.store') }}" method="POST">
                     @csrf
                     <div class="bg-white px-6 py-6 border-b border-gray-100">
-                        <h3 class="text-xl font-bold text-primary">Catat Stok Masuk</h3>
+                        <h3 class="text-xl font-bold text-primary">Catat Stok Keluar</h3>
                     </div>
 
                     <div class="bg-white px-6 py-6 space-y-4">
@@ -118,19 +137,19 @@
                             <select name="obat_id" required class="w-full rounded-lg border-gray-200 focus:border-accent focus:ring-accent text-sm">
                                 <option value="">-- Pilih Obat --</option>
                                 @foreach($obat as $o)
-                                    <option value="{{ $o->id }}">{{ $o->kode_obat }} - {{ $o->nama_obat }} (Stok: {{ $o->stok_sekarang }})</option>
+                                    <option value="{{ $o->id }}">{{ $o->nama_obat }} (Stok: {{ $o->stok_sekarang }})</option>
                                 @endforeach
                             </select>
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Jumlah Masuk</label>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Jumlah Keluar</label>
                                 <input type="number" name="jumlah" required min="1" class="w-full rounded-lg border-gray-200 focus:border-accent focus:ring-accent text-sm">
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tanggal Masuk</label>
-                                <input type="date" name="tanggal_masuk" value="{{ date('Y-m-d') }}" required class="w-full rounded-lg border-gray-200 focus:border-accent focus:ring-accent text-sm">
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tanggal Keluar</label>
+                                <input type="date" name="tanggal_keluar" value="{{ date('Y-m-d') }}" required class="w-full rounded-lg border-gray-200 focus:border-accent focus:ring-accent text-sm">
                             </div>
                         </div>
                     </div>
@@ -154,11 +173,11 @@
             <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span>&#8203;
 
             <div x-show="showEditModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" class="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <form :action="'{{ url('transaksi-masuk') }}/' + editData.id" method="POST">
+                <form :action="'{{ url('stok-keluar') }}/' + editData.id" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="bg-white px-6 py-6 border-b border-gray-100">
-                        <h3 class="text-xl font-bold text-primary">Edit Stok Masuk</h3>
+                        <h3 class="text-xl font-bold text-primary">Edit Stok Keluar</h3>
                     </div>
 
                     <div class="bg-white px-6 py-6 space-y-4">
@@ -174,12 +193,12 @@
 
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Jumlah Masuk</label>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Jumlah Keluar</label>
                                 <input type="number" name="jumlah" x-model="editData.jumlah" required min="1" class="w-full rounded-lg border-gray-200 focus:border-accent focus:ring-accent text-sm">
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tanggal Masuk</label>
-                                <input type="date" name="tanggal_masuk" x-model="editData.tanggal_masuk" required class="w-full rounded-lg border-gray-200 focus:border-accent focus:ring-accent text-sm">
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tanggal Keluar</label>
+                                <input type="date" name="tanggal_keluar" x-model="editData.tanggal_keluar" required class="w-full rounded-lg border-gray-200 focus:border-accent focus:ring-accent text-sm">
                             </div>
                         </div>
                     </div>
