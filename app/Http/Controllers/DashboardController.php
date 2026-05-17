@@ -28,17 +28,17 @@ class DashboardController extends Controller
         
         $masuk = TransaksiMasuk::with('obat', 'user')->latest()->take(5)->get()->map(function($item) {
             $item->tipe = 'Masuk';
-            $item->tanggal = $item->tanggal_masuk;
+            $item->display_date = $item->created_at;
             return $item;
         });
 
         $keluar = TransaksiKeluar::with('obat', 'user')->latest()->take(5)->get()->map(function($item) {
             $item->tipe = 'Keluar';
-            $item->tanggal = $item->tanggal_keluar;
+            $item->display_date = $item->created_at;
             return $item;
         });
 
-        $transaksi_terakhir = $masuk->concat($keluar)->sortByDesc('created_at')->take(5);
+        $transaksi_terakhir = $masuk->concat($keluar)->sortByDesc('display_date')->take(5);
 
         return view('dashboard', compact('stats', 'peringatan_stok', 'transaksi_terakhir'));
     }

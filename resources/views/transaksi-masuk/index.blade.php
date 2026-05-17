@@ -3,7 +3,25 @@
 @section('title', 'Manajemen Stok Masuk')
 
 @section('content')
-<div class="space-y-6" x-data="{ showModal: false }">
+<div class="space-y-6" x-data="{ 
+    showModal: false,
+    showEditModal: false,
+    editData: {
+        id: '',
+        obat_id: '',
+        jumlah: '',
+        tanggal_masuk: ''
+    },
+    openEditModal(item) {
+        this.editData = {
+            id: item.id,
+            obat_id: item.obat_id,
+            jumlah: item.jumlah,
+            tanggal_masuk: item.tanggal_masuk
+        };
+        this.showEditModal = true;
+    }
+}">
     <!-- Header Actions -->
     <div class="flex justify-between items-center">
         <p class="text-sm text-gray-500">Catat penerimaan obat baru ke gudang</p>
@@ -43,7 +61,10 @@
                             <td class="px-6 py-4 text-sm font-bold text-primary">{{ $item->obat->nama_obat }}</td>
                             <td class="px-6 py-4 text-sm text-gray-600 text-center">{{ ucfirst($item->obat->satuan) }}</td>
                             <td class="px-6 py-4 text-sm font-bold text-center text-accent">+ {{ $item->jumlah }}</td>
-                            <td class="px-6 py-4 text-center">
+                            <td class="px-6 py-4 text-center flex justify-center space-x-2">
+                                <button @click="openEditModal({{ $item }})" class="text-blue-500 hover:text-blue-700 transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                </button>
                                 @if(auth()->user()->role === 'admin')
                                     <form action="{{ route('transaksi-masuk.destroy', $item) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus catatan ini? Stok akan dikurangi kembali.')">
                                         @csrf
@@ -117,6 +138,55 @@
                     <div class="bg-gray-50 px-6 py-4 flex flex-row-reverse space-x-2 space-x-reverse">
                         <button type="submit" class="bg-accent hover:bg-blue-500 text-white px-6 py-2 rounded-lg font-bold text-sm transition duration-150">Simpan Catatan</button>
                         <button type="button" @click="showModal = false" class="bg-white hover:bg-gray-100 text-gray-600 px-6 py-2 rounded-lg font-bold text-sm border border-gray-200 transition duration-150">Batal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal Form -->
+    <div x-show="showEditModal" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div x-show="showEditModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 transition-opacity" @click="showEditModal = false">
+                <div class="absolute inset-0 bg-black opacity-50"></div>
+            </div>
+
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span>&#8203;
+
+            <div x-show="showEditModal" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" class="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <form :action="'{{ url('transaksi-masuk') }}/' + editData.id" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="bg-white px-6 py-6 border-b border-gray-100">
+                        <h3 class="text-xl font-bold text-primary">Edit Stok Masuk</h3>
+                    </div>
+
+                    <div class="bg-white px-6 py-6 space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Pilih Obat</label>
+                            <select name="obat_id" x-model="editData.obat_id" required class="w-full rounded-lg border-gray-200 focus:border-accent focus:ring-accent text-sm">
+                                <option value="">-- Pilih Obat --</option>
+                                @foreach($obat as $o)
+                                    <option value="{{ $o->id }}">{{ $o->kode_obat }} - {{ $o->nama_obat }} (Stok: {{ $o->stok_sekarang }})</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Jumlah Masuk</label>
+                                <input type="number" name="jumlah" x-model="editData.jumlah" required min="1" class="w-full rounded-lg border-gray-200 focus:border-accent focus:ring-accent text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tanggal Masuk</label>
+                                <input type="date" name="tanggal_masuk" x-model="editData.tanggal_masuk" required class="w-full rounded-lg border-gray-200 focus:border-accent focus:ring-accent text-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 px-6 py-4 flex flex-row-reverse space-x-2 space-x-reverse">
+                        <button type="submit" class="bg-accent hover:bg-blue-500 text-white px-6 py-2 rounded-lg font-bold text-sm transition duration-150">Update Catatan</button>
+                        <button type="button" @click="showEditModal = false" class="bg-white hover:bg-gray-100 text-gray-600 px-6 py-2 rounded-lg font-bold text-sm border border-gray-200 transition duration-150">Batal</button>
                     </div>
                 </form>
             </div>

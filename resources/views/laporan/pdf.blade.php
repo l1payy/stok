@@ -26,7 +26,7 @@
         </div>
         <h1>UPT PUSKESMAS KARANG REJO</h1>
         <p>Aplikasi Monitoring Persediaan Stok Obat</p>
-        <p>Jl. Karang Rejo No. 123, Karang Rejo</p>
+        <p>Karang Rejo, Kec. Stabat, Kabupaten Langkat, Sumatera Utara</p>
     </div>
 
     <div class="info">

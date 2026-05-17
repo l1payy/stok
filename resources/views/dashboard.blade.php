@@ -121,7 +121,7 @@
                 <tbody class="divide-y divide-gray-100">
                     @foreach($transaksi_terakhir as $trx)
                         <tr class="hover:bg-gray-50 transition duration-150">
-                            <td class="px-6 py-4 text-sm text-gray-600">{{ \Carbon\Carbon::parse($trx->tanggal)->format('d M Y, H:i') }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-600">{{ $trx->display_date->format('d M Y, H:i') }} WIB</td>
                             <td class="px-6 py-4 text-sm font-bold text-primary">{{ $trx->obat->nama_obat }}</td>
                             <td class="px-6 py-4 text-center">
                                 @if($trx->tipe == 'Masuk')
