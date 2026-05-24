@@ -152,12 +152,10 @@
                             <td class="px-6 py-4 text-center">
                                 @if($trx->tipe == 'Masuk')
                                     <span class="flex items-center justify-center text-gray-900 text-xs font-semibold">
-                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                         Masuk
                                     </span>
                                 @else
                                     <span class="flex items-center justify-center text-gray-900 text-xs font-semibold">
-                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                                         Keluar
                                     </span>
                                 @endif

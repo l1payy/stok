@@ -55,7 +55,7 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @forelse($transaksi as $index => $item)
-                        <tr class="hover:bg-gray-50 transition duration-150">
+                        <tr class="hover:bg-gray-50 transition duration-150" x-data="{ item: @json($item) }">
                             <td class="px-6 py-4 text-sm text-gray-600">{{ $transaksi->firstItem() + $index }}</td>
                             <td class="px-6 py-4 text-sm text-gray-600">{{ \Carbon\Carbon::parse($item->tanggal_masuk)->format('d M Y') }}</td>
                             <td class="px-6 py-4 text-sm font-bold text-primary">{{ $item->obat->nama_obat }}</td>
@@ -181,7 +181,7 @@
                             <select name="obat_id" x-model="editData.obat_id" required class="w-full rounded-lg border-gray-200 focus:border-accent focus:ring-accent text-sm">
                                 <option value="">-- Pilih Obat --</option>
                                 @foreach($obat as $o)
-                                    <option value="{{ $o->id }}">{{ $o->kode_obat }} - {{ $o->nama_obat }} (Stok: {{ $o->stok_sekarang }})</option>
+                                    <option value="{{ $o->id }}">{{ $o->nama_obat }} (Stok: {{ $o->stok_sekarang }})</option>
                                 @endforeach
                             </select>
                         </div>

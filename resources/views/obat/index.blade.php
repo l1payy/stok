@@ -48,7 +48,7 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div class="relative w-full md:w-96">
             <form action="{{ route('obat.index') }}" method="GET">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama obat atau kode..." class="w-full pl-10 pr-4 py-2 rounded-lg border-gray-200 focus:border-accent focus:ring-accent text-sm transition duration-150">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama obat" class="w-full pl-10 pr-4 py-2 rounded-lg border-gray-200 focus:border-accent focus:ring-accent text-sm transition duration-150">
                 <div class="absolute left-3 top-2.5 text-gray-400">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
@@ -102,24 +102,72 @@
                             <td class="px-6 py-4 text-sm text-gray-600 text-center">{{ $item->sumber_obat }}</td>
                             <td class="px-6 py-4 text-sm text-center">
                                 @php
-                                    $oneMonthFromNow = \Carbon\Carbon::now()->addMonth();
-                                    $nearExpiryCount = $item->stokMasuk()
-                                        ->whereBetween('tanggal_kadaluarsa', [\Carbon\Carbon::now(), $oneMonthFromNow])
-                                        ->sum('jumlah');
+                                    $now = \Carbon\Carbon::now()->startOfDay();
+                                    $oneMonthFromNow = \Carbon\Carbon::now()->addMonth()->endOfDay();
                                     
-                                    // Also check the initial expiry date set on the medicine itself
-                                    if ($item->tanggal_kadaluarsa && 
-                                        \Carbon\Carbon::parse($item->tanggal_kadaluarsa)->isBetween(\Carbon\Carbon::now(), $oneMonthFromNow)) {
-                                        // This is tricky because we don't know how much of the 'stok_sekarang' belongs to the initial expiry
-                                        // But for the logic you want, we'll focus on the transactions first.
+                                    // 1. Kumpulkan semua batch (Master + Transaksi Masuk)
+                                    $batches = collect();
+                                    
+                                    // Batch Master (Stok Awal)
+                                    $totalMasuk = $item->stokMasuk()->sum('jumlah');
+                                    $totalKeluar = $item->stokKeluar()->sum('jumlah');
+                                    $stokAwal = max(0, $item->stok_sekarang + $totalKeluar - $totalMasuk);
+                                    
+                                    if ($stokAwal > 0) {
+                                        $batches->push([
+                                            'qty' => $stokAwal,
+                                            'expiry' => $item->tanggal_kadaluarsa ? \Carbon\Carbon::parse($item->tanggal_kadaluarsa) : null
+                                        ]);
+                                    }
+                                    
+                                    // Batch dari Transaksi Masuk
+                                    foreach ($item->stokMasuk as $trx) {
+                                        $batches->push([
+                                            'qty' => $trx->jumlah,
+                                            'expiry' => $trx->tanggal_kadaluarsa ? \Carbon\Carbon::parse($trx->tanggal_kadaluarsa) : null
+                                        ]);
+                                    }
+
+                                    // 2. Urutkan batch dari yang PALING LAMA kadaluarsanya (Latest Expiry) ke yang paling cepat
+                                    // Karena kita asumsikan stok yang keluar adalah yang paling cepat kadaluarsa (FEFO)
+                                    // Maka sisa stok yang ada sekarang adalah stok dari batch-batch yang kadaluarsanya paling lama.
+                                    $sortedBatches = $batches->sortByDesc(function($batch) {
+                                        return $batch['expiry'] ? $batch['expiry']->timestamp : 9999999999;
+                                    });
+
+                                    $sisaStokTersedia = $item->stok_sekarang;
+                                    $sudahKadaluarsaUnit = 0;
+                                    $akanKadaluarsaUnit = 0;
+
+                                    foreach ($sortedBatches as $batch) {
+                                        if ($sisaStokTersedia <= 0) break;
+                                        
+                                        $qtyInThisBatch = min($sisaStokTersedia, $batch['qty']);
+                                        $sisaStokTersedia -= $qtyInThisBatch;
+                                        
+                                        if ($batch['expiry']) {
+                                            if ($batch['expiry']->lt($now)) {
+                                                $sudahKadaluarsaUnit += $qtyInThisBatch;
+                                            } elseif ($batch['expiry']->isBetween($now, $oneMonthFromNow)) {
+                                                $akanKadaluarsaUnit += $qtyInThisBatch;
+                                            }
+                                        }
                                     }
                                 @endphp
 
-                                @if($nearExpiryCount > 0)
-                                    <span class="text-gray-900 font-bold">{{ $nearExpiryCount }} (Akan Kadaluarsa)</span>
-                                @else
-                                    <span class="text-gray-400">-</span>
-                                @endif
+                                <div class="flex flex-col space-y-1">
+                                    @if($sudahKadaluarsaUnit > 0)
+                                        <span class="text-red-600 font-bold">{{ $sudahKadaluarsaUnit }} Sudah Kadaluarsa</span>
+                                    @endif
+                                    
+                                    @if($akanKadaluarsaUnit > 0)
+                                        <span class="text-gray-900 font-bold">{{ $akanKadaluarsaUnit }} Akan Kadaluarsa (1 Bln)</span>
+                                    @endif
+
+                                    @if($sudahKadaluarsaUnit == 0 && $akanKadaluarsaUnit == 0)
+                                        <span class="text-gray-400">-</span>
+                                    @endif
+                                </div>
                             </td>
                             <td class="px-6 py-4 text-sm font-bold text-center text-gray-900">
                                 {{ $item->stok_sekarang }}

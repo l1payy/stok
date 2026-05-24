@@ -33,10 +33,9 @@ class StokMasukController extends Controller
             $obat = Obat::find($validated['obat_id']);
             $obat->increment('stok_sekarang', $validated['jumlah']);
             
-            // Update obat's source and expiry date from latest transaction
+            // Update obat's source only, DON'T overwrite expiry date
             $obat->update([
                 'sumber_obat' => $validated['sumber_obat'],
-                'tanggal_kadaluarsa' => $validated['tanggal_kadaluarsa'],
             ]);
         });
 

@@ -186,7 +186,7 @@
                             <select name="obat_id" x-model="editData.obat_id" required class="w-full rounded-lg border-gray-200 focus:border-accent focus:ring-accent text-sm">
                                 <option value="">-- Pilih Obat --</option>
                                 @foreach($obat as $o)
-                                    <option value="{{ $o->id }}">{{ $o->kode_obat }} - {{ $o->nama_obat }} (Stok: {{ $o->stok_sekarang }})</option>
+                                    <option value="{{ $o->id }}">{{ $o->nama_obat }} (Stok: {{ $o->stok_sekarang }})</option>
                                 @endforeach
                             </select>
                         </div>

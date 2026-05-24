@@ -3,8 +3,8 @@
         <div class="flex justify-center mb-6">
             <x-application-logo class="w-36 h-36 object-contain" />
         </div>
-        <h2 class="text-3xl font-extrabold text-primary tracking-tight">Selamat Datang</h2>
-        <p class="text-sm text-gray-500 mt-2 font-medium">Monitoring Persediaan Stok Obat</p>
+        <h2 class="text-3xl font-extrabold text-primary tracking-tight">Website Monitoring Stok Obat</h2>
+        <p class="text-sm text-gray-500 mt-2 font-medium">UPT Puskesmas Karang Rejo</p>
     </div>
 
     <!-- Session Status -->

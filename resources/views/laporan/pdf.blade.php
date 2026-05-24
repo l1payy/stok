@@ -8,7 +8,11 @@
             font-family: sans-serif;
             color: #333;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+        }
+
+        .container {
+            padding: 20px 30px;
         }
 
         .kop-surat {
@@ -92,14 +96,16 @@
             background-color: #0C447C;
             color: white;
             padding: 10px;
-            font-size: 12px;
-            text-align: left;
+            font-size: 11px;
+            text-align: center;
+            border: 1px solid #0C447C;
         }
 
         table.data td {
-            padding: 8px 10px;
-            border-bottom: 1px solid #eee;
-            font-size: 11px;
+            padding: 8px 5px;
+            border: 1px solid #ddd;
+            font-size: 10px;
+            vertical-align: middle;
         }
 
         .footer {
@@ -123,7 +129,8 @@
 </head>
 
 <body>
-    <div class="kop-surat">
+    <div class="container">
+        <div class="kop-surat">
         <table class="kop-table">
             <tr>
                 <td class="kop-logo">
@@ -159,14 +166,14 @@
     <table class="data">
         <thead>
             <tr>
-                <th width="30">No</th>
-                <th>Nama Obat</th>
-                <th width="60">Satuan</th>
-                <th width="50" class="text-center">Masuk</th>
-                <th width="50" class="text-center">Keluar</th>
-                <th width="70" class="text-center">Harga Satuan</th>
-                <th width="80" class="text-center">Total Harga Keluar</th>
-                <th width="60" class="text-center">Sisa Stok</th>
+                <th width="5%">No</th>
+                <th width="25%">Nama Obat</th>
+                <th width="10%">Satuan</th>
+                <th width="10%">Masuk</th>
+                <th width="10%">Keluar</th>
+                <th width="15%">Harga Satuan</th>
+                <th width="15%">Total Harga Keluar</th>
+                <th width="10%">Sisa Stok</th>
             </tr>
         </thead>
         <tbody>
@@ -175,11 +182,11 @@
                 <td class="text-center">{{ $index + 1 }}</td>
                 <td class="font-bold">{{ $item->nama_obat }}</td>
                 <td class="text-center">{{ ucfirst($item->satuan) }}</td>
-                <td class="text-center">{{ $item->masuk }}</td>
-                <td class="text-center">{{ $item->keluar }}</td>
+                <td class="text-center">{{ number_format($item->masuk, 0, ',', '.') }}</td>
+                <td class="text-center">{{ number_format($item->keluar, 0, ',', '.') }}</td>
                 <td class="text-center">Rp {{ number_format($item->harga_satuan, 0, ',', '.') }}</td>
                 <td class="text-center">Rp {{ number_format($item->harga_satuan * $item->keluar, 0, ',', '.') }}</td>
-                <td class="text-center">{{ $item->sisa_stok }}</td>
+                <td class="text-center">{{ number_format($item->sisa_stok, 0, ',', '.') }}</td>
             </tr>
             @endforeach
         </tbody>
@@ -191,6 +198,7 @@
         <p class="font-bold">( __________________________ )</p>
         <p>Kepala Puskesmas</p>
     </div>
+</div>
 </body>
 
 </html>
