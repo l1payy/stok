@@ -12,17 +12,20 @@ class Obat extends Model
         'kode_obat',
         'nama_obat',
         'satuan',
+        'harga_satuan',
+        'sumber_obat',
+        'tanggal_kadaluarsa',
         'stok_sekarang',
         'stok_minimum',
     ];
 
-    public function transaksiMasuk()
+    public function stokMasuk()
     {
-        return $this->hasMany(TransaksiMasuk::class);
+        return $this->hasMany(StokMasuk::class, 'obat_id');
     }
 
-    public function transaksiKeluar()
+    public function stokKeluar()
     {
-        return $this->hasMany(TransaksiKeluar::class);
+        return $this->hasMany(StokKeluar::class, 'obat_id');
     }
 }

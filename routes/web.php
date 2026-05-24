@@ -3,8 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ObatController;
-use App\Http\Controllers\TransaksiMasukController;
-use App\Http\Controllers\TransaksiKeluarController;
+use App\Http\Controllers\StokMasukController;
+use App\Http\Controllers\StokKeluarController;
 use App\Http\Controllers\LaporanController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,8 +17,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     Route::resource('/obat', ObatController::class);
     
-    Route::resource('/transaksi-masuk', TransaksiMasukController::class)->only(['index', 'store', 'update', 'destroy']);
-    Route::resource('/transaksi-keluar', TransaksiKeluarController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('/stok-masuk', StokMasukController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('/stok-keluar', StokKeluarController::class)->only(['index', 'store', 'update', 'destroy']);
     
     Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     Route::get('/laporan/export', [LaporanController::class, 'export'])->name('laporan.export');

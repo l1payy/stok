@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Obat;
-use App\Models\TransaksiMasuk;
-use App\Models\TransaksiKeluar;
+use App\Models\StokMasuk;
+use App\Models\StokKeluar;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -49,11 +49,11 @@ class LaporanController extends Controller
         $rekap = [];
 
         foreach ($obat as $item) {
-            $masuk = TransaksiMasuk::where('obat_id', $item->id)
+            $masuk = StokMasuk::where('obat_id', $item->id)
                 ->whereBetween('tanggal_masuk', [$startDate, $endDate])
                 ->sum('jumlah');
 
-            $keluar = TransaksiKeluar::where('obat_id', $item->id)
+            $keluar = StokKeluar::where('obat_id', $item->id)
                 ->whereBetween('tanggal_keluar', [$startDate, $endDate])
                 ->sum('jumlah');
 
@@ -62,6 +62,7 @@ class LaporanController extends Controller
                 $rekap[] = (object) [
                     'nama_obat' => $item->nama_obat,
                     'satuan' => $item->satuan,
+                    'harga_satuan' => $item->harga_satuan,
                     'masuk' => $masuk,
                     'keluar' => $keluar,
                     'sisa_stok' => $item->stok_sekarang

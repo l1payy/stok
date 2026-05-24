@@ -36,10 +36,10 @@
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Obat Masuk</p>
-                    <h3 class="text-3xl font-bold text-primary mt-1">{{ number_format($summary['total_masuk']) }}</h3>
+                    <h3 class="text-3xl font-bold text-gray-900 mt-1">{{ number_format($summary['total_masuk']) }}</h3>
                     <p class="text-[10px] text-gray-400 mt-1">Item Obat</p>
                 </div>
-                <div class="p-2 bg-blue-50 rounded-lg text-accent">
+                <div class="p-2 bg-gray-50 rounded-lg text-gray-400">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
             </div>
@@ -49,10 +49,10 @@
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Obat Keluar</p>
-                    <h3 class="text-3xl font-bold text-primary mt-1">{{ number_format($summary['total_keluar']) }}</h3>
+                    <h3 class="text-3xl font-bold text-gray-900 mt-1">{{ number_format($summary['total_keluar']) }}</h3>
                     <p class="text-[10px] text-gray-400 mt-1">Item Obat</p>
                 </div>
-                <div class="p-2 bg-blue-50 rounded-lg text-accent">
+                <div class="p-2 bg-gray-50 rounded-lg text-gray-400">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
             </div>
@@ -62,10 +62,10 @@
             <div class="flex justify-between items-start">
                 <div>
                     <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Sisa Stok</p>
-                    <h3 class="text-3xl font-bold text-primary mt-1">{{ number_format($summary['sisa_stok']) }}</h3>
+                    <h3 class="text-3xl font-bold text-gray-900 mt-1">{{ number_format($summary['sisa_stok']) }}</h3>
                     <p class="text-[10px] text-gray-400 mt-1">Unit Tersedia</p>
                 </div>
-                <div class="p-2 bg-blue-50 rounded-lg text-accent">
+                <div class="p-2 bg-gray-50 rounded-lg text-gray-400">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
                 </div>
             </div>
@@ -91,15 +91,15 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @forelse($rekap as $index => $item)
-                        <tr class="hover:bg-gray-50 transition duration-150">
-                            <td class="px-6 py-4 text-sm text-gray-600">{{ $index + 1 }}</td>
+                        <tr class="hover:bg-gray-50 transition duration-150 border-b border-gray-50">
+                            <td class="px-6 py-4 text-sm text-gray-500">{{ $index + 1 }}</td>
                             <td class="px-6 py-4 text-sm font-bold text-primary">{{ $item->nama_obat }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-600 text-center">{{ ucfirst($item->satuan) }}</td>
-                            <td class="px-6 py-4 text-sm font-bold text-center text-accent">{{ $item->masuk }}</td>
-                            <td class="px-6 py-4 text-sm font-bold text-center text-warning">{{ $item->keluar }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500 text-center">{{ ucfirst($item->satuan) }}</td>
+                            <td class="px-6 py-4 text-sm font-bold text-center text-gray-900">{{ number_format($item->masuk) }}</td>
+                            <td class="px-6 py-4 text-sm font-bold text-center text-gray-900">{{ number_format($item->keluar) }}</td>
                             <td class="px-6 py-4 text-center">
-                                <span class="px-3 py-1 text-xs font-bold rounded-full bg-blue-50 text-accent">
-                                    {{ $item->sisa_stok }}
+                                <span class="px-3 py-1 text-sm font-bold text-gray-900 rounded-lg">
+                                    {{ number_format($item->sisa_stok) }}
                                 </span>
                             </td>
                         </tr>

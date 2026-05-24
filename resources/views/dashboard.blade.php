@@ -5,16 +5,16 @@
 @section('content')
 <div class="space-y-6">
     <!-- Stat Cards -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         <!-- Total Jenis Obat -->
         <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-accent">
             <div class="flex justify-between items-start">
                 <div>
-                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Jenis Obat</p>
-                    <h3 class="text-3xl font-bold text-primary mt-1">{{ $stats['total_obat'] }}</h3>
+                    <p class="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Total Jenis Obat</p>
+                    <h3 class="text-2xl font-bold text-primary mt-1">{{ $stats['total_obat'] }}</h3>
                 </div>
                 <div class="p-2 bg-blue-50 rounded-lg text-accent">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                 </div>
             </div>
         </div>
@@ -23,11 +23,11 @@
         <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-success">
             <div class="flex justify-between items-start">
                 <div>
-                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Stok Aman</p>
-                    <h3 class="text-3xl font-bold text-primary mt-1">{{ $stats['stok_aman'] }}</h3>
+                    <p class="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Stok Aman</p>
+                    <h3 class="text-2xl font-bold text-primary mt-1">{{ $stats['stok_aman'] }}</h3>
                 </div>
                 <div class="p-2 bg-green-50 rounded-lg text-success">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
             </div>
         </div>
@@ -36,11 +36,11 @@
         <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-warning">
             <div class="flex justify-between items-start">
                 <div>
-                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Stok Menipis</p>
-                    <h3 class="text-3xl font-bold text-primary mt-1">{{ $stats['stok_menipis'] }}</h3>
+                    <p class="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Stok Menipis</p>
+                    <h3 class="text-2xl font-bold text-primary mt-1">{{ $stats['stok_menipis'] }}</h3>
                 </div>
                 <div class="p-2 bg-amber-50 rounded-lg text-warning">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                 </div>
             </div>
         </div>
@@ -49,11 +49,37 @@
         <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-danger">
             <div class="flex justify-between items-start">
                 <div>
-                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Stok Habis</p>
-                    <h3 class="text-3xl font-bold text-primary mt-1">{{ $stats['stok_habis'] }}</h3>
+                    <p class="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Stok Habis</p>
+                    <h3 class="text-2xl font-bold text-primary mt-1">{{ $stats['stok_habis'] }}</h3>
                 </div>
                 <div class="p-2 bg-red-50 rounded-lg text-danger">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kadaluarsa (1 Bln) -->
+        <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-orange-500">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Kadaluarsa (1 Bln)</p>
+                    <h3 class="text-2xl font-bold text-primary mt-1">{{ $stats['kadaluarsa_sebulan'] }}</h3>
+                </div>
+                <div class="p-2 bg-orange-50 rounded-lg text-orange-500">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sudah Kadaluarsa -->
+        <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-gray-800">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Sudah Kadaluarsa</p>
+                    <h3 class="text-2xl font-bold text-primary mt-1">{{ $stats['sudah_kadaluarsa'] }}</h3>
+                </div>
+                <div class="p-2 bg-gray-100 rounded-lg text-gray-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                 </div>
             </div>
         </div>
@@ -86,9 +112,9 @@
                             <td class="px-6 py-4 text-sm text-gray-600 text-center">{{ $obat->stok_minimum }}</td>
                             <td class="px-6 py-4 text-center">
                                 @if($obat->stok_sekarang == 0)
-                                    <span class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-red-100 text-danger">Habis</span>
+                                    <span class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-gray-100 text-gray-900">Habis</span>
                                 @else
-                                    <span class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-amber-100 text-warning">Menipis</span>
+                                    <span class="px-3 py-1 text-[10px] font-bold uppercase rounded-full bg-gray-100 text-gray-900">Menipis</span>
                                 @endif
                             </td>
                         </tr>
@@ -125,18 +151,18 @@
                             <td class="px-6 py-4 text-sm font-bold text-primary">{{ $trx->obat->nama_obat }}</td>
                             <td class="px-6 py-4 text-center">
                                 @if($trx->tipe == 'Masuk')
-                                    <span class="flex items-center justify-center text-success text-xs font-semibold">
+                                    <span class="flex items-center justify-center text-gray-900 text-xs font-semibold">
                                         <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                         Masuk
                                     </span>
                                 @else
-                                    <span class="flex items-center justify-center text-warning text-xs font-semibold">
+                                    <span class="flex items-center justify-center text-gray-900 text-xs font-semibold">
                                         <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                                         Keluar
                                     </span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-sm font-bold text-center {{ $trx->tipe == 'Masuk' ? 'text-primary' : 'text-gray-700' }}">
+                            <td class="px-6 py-4 text-sm font-bold text-center text-gray-900">
                                 {{ $trx->jumlah }}
                             </td>
                         </tr>
