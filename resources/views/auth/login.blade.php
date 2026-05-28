@@ -51,7 +51,7 @@
 
         <div class="pt-2">
             <x-primary-button class="w-full justify-center py-3.5 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-lg shadow-primary/20 transition duration-150 active:scale-[0.98]">
-                {{ __('Masuk Ke Sistem') }}
+                {{ __('Login') }}
             </x-primary-button>
         </div>
     </form>
