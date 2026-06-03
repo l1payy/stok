@@ -33,16 +33,19 @@
         .kop-logo {
             width: 120px;
             text-align: center;
+            vertical-align: middle;
         }
 
         .kop-logo img {
-            width: 100px;
-            height: auto;
-            margin-left: 15px;
+            width: 85px;
+            height: 85px;
+            object-fit: contain;
+            margin-left: 0;
         }
 
         .kop-text {
             text-align: center;
+            vertical-align: middle;
             line-height: 1.2;
         }
 
@@ -142,7 +145,9 @@
                     <p>JL. TG. PURA KM. 33,3 KARANG REJO KODE POS. 20811</p>
                     <p>Laman : pkmkrejo@gmail.com</p>
                 </td>
-                <td width="80"></td> <!-- Spacer agar teks tetap di tengah -->
+                <td class="kop-logo">
+                    <img src="{{ public_path('storage/logo/kop2.png') }}" alt="Logo" class="logo-img">
+                </td>
             </tr>
         </table>
     </div>

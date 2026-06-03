@@ -21,7 +21,6 @@ class StokMasukController extends Controller
         $validated = $request->validate([
             'obat_id' => 'required|exists:obat,id',
             'jumlah' => 'required|integer|min:1',
-            'sumber_obat' => 'required|in:APBD,JKN',
             'tanggal_kadaluarsa' => 'nullable|date',
             'tanggal_masuk' => 'required|date',
         ]);
@@ -32,11 +31,6 @@ class StokMasukController extends Controller
 
             $obat = Obat::find($validated['obat_id']);
             $obat->increment('stok_sekarang', $validated['jumlah']);
-            
-            // Update obat's source only, DON'T overwrite expiry date
-            $obat->update([
-                'sumber_obat' => $validated['sumber_obat'],
-            ]);
         });
 
         return redirect()->route('stok-masuk.index')->with('success', 'Stok masuk berhasil dicatat.');

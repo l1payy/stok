@@ -46,7 +46,7 @@ class ObatController extends Controller
             'nama_obat' => 'required',
             'satuan' => 'required',
             'harga_satuan' => 'required|numeric|min:0',
-            'sumber_obat' => 'required|in:APBD,JKN',
+            // 'sumber_obat' => 'required|in:APBD,JKN',
             'tanggal_kadaluarsa' => 'nullable|date',
             'stok_sekarang' => 'required|integer|min:0',
             'stok_minimum' => 'required|integer|min:0',
